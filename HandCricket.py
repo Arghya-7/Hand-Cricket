@@ -1,6 +1,8 @@
 import random
 from time import sleep
 #1 means batting and 0 means bowling
+batting=False
+wicket=0
 class Computer:
     def __init__(self,run,wicket,over):
         self.score=run
@@ -20,9 +22,11 @@ class Human:
         return random.randint(0,1)
     def run(self):
         x=int(input("Enter the run:"))
-        if x>6:
+        if x>6 and batting==True:
             print("As you entered run >6, 1 will be deducted")
             return -1
+        elif x>6:
+            print("There is no chance of out if the number is >6")
         else:
             return x
     def choice(self):
@@ -33,9 +37,13 @@ class Human:
         return ch
 def game(obj1,obj2):
     bowl=0
-    print("Match is starting in..")
+    print("Ready..")
+    if batting==True:
+        print("Your Batting will be started in:")
+    else:
+        print("Your Bowling will be started in:")
     for i in range(0,6):
-        print("  ",5-i,"  ")
+        print("***___",5-i,"___***")
         sleep(1)
     while obj1.wicket>0 and obj2.over>0:
         bowl=bowl+1
@@ -44,16 +52,18 @@ def game(obj1,obj2):
         if run1==run2:
             print("It is Out")
             obj1.wicket=obj1.wicket-1
-            print("Score is:{}/{}".format(obj1.score,obj1.wicket))
+            print("Score is:{}/{}".format(obj1.score,wicket-obj1.wicket))
         else:
             obj1.score=obj1.score+run1
 
         if bowl==6:
             obj2.over=obj2.over-1
             bowl=0
+            print("***______***")
             print("Remaing overs are:",obj2.over)
             print("Run is:",obj1.score)
 
+    print("***______***")
     print("Final run is:",obj1.score)
     print("Over remaining",obj2.over)
          
@@ -71,9 +81,11 @@ if __name__ == '__main__':
         print("You have won the toss")
         playerChoice=player.choice()
         if playerChoice==1:
+            batting=True
             print("You are going to bat")
             game(player,comp)
             print("You are going to bowl")
+            batting=False
             game(comp,player)
 
             if player.score > comp.score:
@@ -82,8 +94,10 @@ if __name__ == '__main__':
                 print("Oops!Batter luck next time")
         else:
             print("You are going to bowl")
+            batting=False
             game(comp,player)
             print("You are going to bat")
+            batting=True
             game(player,comp)                      
             if player.score > comp.score:
                 print("You win")
@@ -94,8 +108,10 @@ if __name__ == '__main__':
         print("You loss the toss")
         comChoice=comp.choice()
         if comChoice==0:
+            batting=False
             print("You are going to bowl")
             game(comp,player)
+            batting=True
             print("You are going to bat")
             game(player,comp)                      
             if player.score > comp.score:
@@ -103,8 +119,10 @@ if __name__ == '__main__':
             else:
                 print("Oops!Batter luck next time")
         else:
+            batting=True
             print("You are going to bat")
             game(player,comp)
+            batting=False
             print("You are going to bowl")
             game(comp,player)
 
